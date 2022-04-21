@@ -21,6 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   Uint8List? _image;
+  bool _isLoading =
+      false; //signup takes time,so to show a loading indicator till then
 
   @override
   void dispose() {
@@ -33,10 +35,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   //image picking
   void selectImage() async {
-    Uint8List image = await pickImage(ImageSource.gallery);
+    try {
+      Uint8List image = await pickImage(ImageSource.gallery);
+      setState(() {
+        _image = image;
+      });
+    } catch (e) {
+      String error = e.toString();
+    }
+  }
+
+  //signup user function for signup button
+  void signUpUser() async {
     setState(() {
-      _image = image;
+      _isLoading = true; //because we are not signed up yet
     });
+    String result = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image!,
+    );
+    setState(() {
+      _isLoading = false; //because we have signed up
+    });
+
+    if (result != 'success') {
+      showSnackBar(result, context);
+    }
   }
 
   @override
@@ -100,15 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 20),
                   InkWell(
-                    onTap: () async {
-                      String result = await AuthMethods().signUpUser(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                        username: _usernameController.text,
-                        bio: _bioController.text,
-                        file: _image!,
-                      );
-                    },
+                    onTap: signUpUser,
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 60),
                       height: 50,
@@ -116,12 +135,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         borderRadius: BorderRadius.circular(50),
                         color: primarycolor,
                       ),
-                      child: const Center(
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
+                      child: _isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                  color: Colors.white))
+                          : const Center(
+                              child: Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            ),
                     ),
                   ),
                   SizedBox(height: 30),
