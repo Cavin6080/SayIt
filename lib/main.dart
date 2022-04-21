@@ -1,15 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sayit/Utils/colors.dart';
 import 'package:sayit/responsive/mobileScreenLayout.dart';
 import 'package:sayit/responsive/responsive_layout_screen.dart';
 import 'package:sayit/responsive/webScreenLayout.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sayit/screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
-      options:const FirebaseOptions(
+      options: const FirebaseOptions(
           apiKey: "AIzaSyBnWEFe2HGi0x3B4vMEIgTFCv2vmXVRJio",
           appId: "1:849238161827:web:f0ed779b8db2bf0b1e0216",
           messagingSenderId: "849238161827",
@@ -33,9 +36,39 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ResponsiveLayout(
-        webScreenLayout: WebScreenLayout(),
-        mobileScreenLayout: MobileScreenLayout(),
+      // home: ResponsiveLayout(
+      //   webScreenLayout: WebScreenLayout(),
+      //   mobileScreenLayout: MobileScreenLayout(),
+      // ),
+      // home: ResponsiveLayout(
+      //   webScreenLayout: WebScreenLayout(),
+      //   mobileScreenLayout: MobileScreenLayout(),
+      // ),,
+      home: StreamBuilder(
+        //persisting auth state
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              //means user is authnticated
+              return const ResponsiveLayout(
+                webScreenLayout: WebScreenLayout(),
+                mobileScreenLayout: MobileScreenLayout(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('${snapshot.error}'),
+              );
+            }
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: primarycolor,
+            ));
+          }
+          return const LoginScreen();
+        },
       ),
     );
   }
