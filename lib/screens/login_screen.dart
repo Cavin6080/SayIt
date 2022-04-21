@@ -1,6 +1,9 @@
 import 'package:sayit/Utils/colors.dart';
 import 'package:sayit/Utils/utilityFunction.dart';
 import 'package:sayit/resources/auth_methods.dart';
+import 'package:sayit/responsive/mobileScreenLayout.dart';
+import 'package:sayit/responsive/responsive_layout_screen.dart';
+import 'package:sayit/responsive/webScreenLayout.dart';
 import 'package:sayit/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
     if (result == 'success') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
       //
     } else {
       showSnackBar(result, context);
@@ -52,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TopImages(),
+            const TopImages(),
             const SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
@@ -67,16 +78,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   UsernamePassField(
                     passwordController: _passwordController,
                     usernameController: _usernameController,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   GestureDetector(
                     onTap: loginUser,
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 60),
+                      margin: const EdgeInsets.symmetric(horizontal: 60),
                       height: 50,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
@@ -96,13 +107,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Container(
-                    margin: EdgeInsets.only(bottom: 20),
+                    margin: const EdgeInsets.only(bottom: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Center(
+                        const Center(
                           child: Text(
                             'Dont\'n have an account\?  ',
                             style: TextStyle(
@@ -114,19 +125,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         Center(
                           child: InkWell(
                             onTap: () {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => SignUpScreen(),
+                                  builder: (context) =>const SignUpScreen(),
                                 ),
                               );
                             },
-                            child: Container(
-                              child: Text(
-                                'Create',
-                                style: TextStyle(
-                                  color: deeppurple,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            child: const Text(
+                              'Create',
+                              style: TextStyle(
+                                color: deeppurple,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -160,7 +169,7 @@ class UsernamePassField extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(196, 135, 198, .3),
             blurRadius: 20,
@@ -171,7 +180,7 @@ class UsernamePassField extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(color: Colors.grey[200]!),
@@ -180,7 +189,7 @@ class UsernamePassField extends StatelessWidget {
             child: TextField(
               keyboardType: TextInputType.emailAddress,
               controller: usernameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Username',
                 hintStyle: TextStyle(color: Colors.grey),
@@ -189,10 +198,10 @@ class UsernamePassField extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: passwordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Password',
                 hintStyle: TextStyle(color: Colors.grey),
@@ -215,7 +224,7 @@ class TopImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       height: 400,
       child: Stack(
         children: [
@@ -224,7 +233,7 @@ class TopImages extends StatelessWidget {
             height: 400,
             width: size.width,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/login_background.png'),
                   fit: BoxFit.fill,
@@ -236,7 +245,7 @@ class TopImages extends StatelessWidget {
             height: 400,
             width: size.width + 15,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/login_background-2.png'),
                   fit: BoxFit.fill,

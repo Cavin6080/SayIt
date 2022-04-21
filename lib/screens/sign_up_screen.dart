@@ -5,6 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sayit/Utils/colors.dart';
 import 'package:sayit/Utils/utilityFunction.dart';
 import 'package:sayit/resources/auth_methods.dart';
+import 'package:sayit/responsive/mobileScreenLayout.dart';
+import 'package:sayit/responsive/responsive_layout_screen.dart';
+import 'package:sayit/responsive/webScreenLayout.dart';
 import 'package:sayit/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -63,6 +66,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (result != 'success') {
       showSnackBar(result, context);
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     }
   }
 
@@ -148,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Container(
                     margin: const EdgeInsets.only(bottom: 20),
                     child: Row(
@@ -166,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Center(
                           child: InkWell(
                             onTap: () {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => LoginScreen(),
                                 ),
