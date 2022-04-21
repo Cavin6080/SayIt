@@ -1,4 +1,6 @@
 import 'package:sayit/Utils/colors.dart';
+import 'package:sayit/Utils/utilityFunction.dart';
+import 'package:sayit/resources/auth_methods.dart';
 import 'package:sayit/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,12 +16,32 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     super.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
+  }
+
+  //function for loging in user
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String result = await AuthMethods().logInUser(
+      email: _usernameController.text,
+      password: _passwordController.text,
+    );
+    if (result == 'success') {
+      //
+    } else {
+      showSnackBar(result, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -52,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 20),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: loginUser,
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 60),
                       height: 50,
@@ -60,12 +82,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(50),
                         color: primarycolor,
                       ),
-                      child: Center(
-                        child: Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
+                      child: _isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                  color: Colors.white),
+                            )
+                          : const Center(
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            ),
                     ),
                   ),
                   SizedBox(height: 30),
