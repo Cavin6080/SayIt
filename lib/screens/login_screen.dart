@@ -1,4 +1,4 @@
-import 'package:sayit/colors.dart';
+import 'package:sayit/Utils/colors.dart';
 import 'package:sayit/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 

@@ -1,4 +1,9 @@
-import 'package:sayit/colors.dart';
+import 'dart:ffi';
+import 'dart:typed_data';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:sayit/Utils/colors.dart';
+import 'package:sayit/Utils/utilityFunction.dart';
 import 'package:sayit/resources/auth_methods.dart';
 import 'package:sayit/screens/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -23,6 +29,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _usernameController.dispose();
+  }
+
+  //image picking
+  void selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
   }
 
   @override
@@ -51,18 +65,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Stack(
                     children: [
                       Center(
-                        child: CircleAvatar(
-                          radius: 35,
-                          backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(
-                              'https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png'),
-                        ),
+                        child: _image != null
+                            ? CircleAvatar(
+                                radius: 35,
+                                backgroundColor: Colors.white,
+                                backgroundImage: MemoryImage(_image!),
+                              )
+                            : const CircleAvatar(
+                                radius: 35,
+                                backgroundColor: Colors.white,
+                                backgroundImage: NetworkImage(
+                                    'https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png'),
+                              ),
                       ),
                       Positioned(
                         bottom: -10,
                         left: 150,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: selectImage,
                           icon: const Icon(
                             Icons.add_a_photo,
                             color: primarycolor,
@@ -82,19 +102,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   InkWell(
                     onTap: () async {
                       String result = await AuthMethods().signUpUser(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          username: _usernameController.text,
-                          bio: _bioController.text);
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        username: _usernameController.text,
+                        bio: _bioController.text,
+                        file: _image!,
+                      );
                     },
                     child: Container(
-                      margin:const EdgeInsets.symmetric(horizontal: 60),
+                      margin: const EdgeInsets.symmetric(horizontal: 60),
                       height: 50,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         color: primarycolor,
                       ),
-                      child:const Center(
+                      child: const Center(
                         child: Text(
                           'Sign Up',
                           style: TextStyle(color: Colors.white, fontSize: 18),
@@ -104,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   SizedBox(height: 30),
                   Container(
-                    margin:const EdgeInsets.only(bottom: 20),
+                    margin: const EdgeInsets.only(bottom: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -126,7 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               );
                             },
-                            child:const Text(
+                            child: const Text(
                               'Login',
                               style: TextStyle(
                                 color: deeppurple,
@@ -168,7 +190,7 @@ class UsernamePassField extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow:const [
+        boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(196, 135, 198, .3),
             blurRadius: 20,
@@ -179,7 +201,7 @@ class UsernamePassField extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding:const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(color: Colors.grey[200]!),
@@ -188,7 +210,7 @@ class UsernamePassField extends StatelessWidget {
             child: TextField(
               keyboardType: TextInputType.text,
               controller: usernameController,
-              decoration:const InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Username',
                 hintStyle: TextStyle(color: secondarycolor),
@@ -202,11 +224,11 @@ class UsernamePassField extends StatelessWidget {
                 bottom: BorderSide(color: Colors.grey[200]!),
               ),
             ),
-            padding:const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               keyboardType: TextInputType.text,
               controller: biocontroller,
-              decoration:const InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Bio',
                 hintStyle: TextStyle(color: secondarycolor),
@@ -220,11 +242,11 @@ class UsernamePassField extends StatelessWidget {
                 bottom: BorderSide(color: Colors.grey[300]!),
               ),
             ),
-            padding:const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               controller: emailcontroller,
               keyboardType: TextInputType.emailAddress,
-              decoration:const InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'E-mail',
                 hintStyle: TextStyle(color: secondarycolor),
@@ -233,11 +255,11 @@ class UsernamePassField extends StatelessWidget {
             ),
           ),
           Container(
-            padding:const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextField(
               keyboardType: TextInputType.text,
               controller: passwordController,
-              decoration:const InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Password',
                 hintStyle: TextStyle(color: secondarycolor),
@@ -269,7 +291,7 @@ class TopImages extends StatelessWidget {
             height: 200,
             width: size.width,
             child: Container(
-              decoration:const BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/login_background.png'),
                   fit: BoxFit.fill,
@@ -281,7 +303,7 @@ class TopImages extends StatelessWidget {
             height: 200,
             width: size.width + 20,
             child: Container(
-              decoration:const BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/login_background-2.png'),
                   fit: BoxFit.fill,
