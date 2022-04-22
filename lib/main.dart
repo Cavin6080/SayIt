@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
                 //means user is authnticated
-                return const ResponsiveLayout(
+                return const ResponsiveLayout( 
                   webScreenLayout: WebScreenLayout(),
                   mobileScreenLayout: MobileScreenLayout(),
                 );

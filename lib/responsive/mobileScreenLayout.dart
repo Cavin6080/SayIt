@@ -8,12 +8,16 @@ import 'package:sayit/screens/screens.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
+   
+    
 
   @override
   State<MobileScreenLayout> createState() => _MobileScreenLayoutState();
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
+ 
+  
   int _currIndex = 0;
   List<Widget> pages = [
     HomeScreen(),
@@ -30,13 +34,9 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
       body: PageView(
         children: [pages[_currIndex]],
       ),
-      bottomNavigationBar:_currIndex == 4 ?null: BottomNavBar(),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
-
-
-
-
 
   NavigationBarTheme BottomNavBar() {
     return NavigationBarTheme(
