@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sayit/Utils/colors.dart';
+import 'package:sayit/Utils/utilityFunction.dart';
 import 'package:sayit/models/usermodel.dart';
 import 'package:sayit/providers/user_provider.dart';
+import 'package:sayit/resources/firestore_methods.dart';
 import 'package:sayit/responsive/mobileScreenLayout.dart';
 import 'package:sayit/screens/home_screen.dart';
 
@@ -20,6 +22,14 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   Uint8List? _file;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _textEditingController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     _file = widget.file;
@@ -48,7 +58,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () => postImg(user!.uid, user.username, user.photoUrl),
             child: Text(
               'Post',
               style: GoogleFonts.openSans(
@@ -65,6 +75,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            _isLoading ? const LinearProgressIndicator() : Container(),
             Container(
               margin: const EdgeInsets.only(top: 20, bottom: 60),
               child: Row(
@@ -116,5 +127,38 @@ class _AddPostScreenState extends State<AddPostScreen> {
         ),
       ),
     );
+  }
+
+  void postImg(
+    String uid,
+    String username,
+    String profileImg,
+  ) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      String result = await FireStoreMethods().uploadPost(
+          _textEditingController.text, _file!, uid, username, profileImg);
+      if (result == 'success') {
+        setState(() {
+          _isLoading = false;
+        });
+        showSnackBar('Posted Successfully', context);
+        clearImg();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MobileScreenLayout()));
+      } else {
+        showSnackBar(result, context);
+      }
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+  }
+
+  void clearImg() {
+    setState(() {
+      _file = null;
+    });
   }
 }
