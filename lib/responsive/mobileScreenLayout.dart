@@ -4,6 +4,7 @@ import 'package:sayit/models/usermodel.dart';
 import 'package:sayit/providers/user_provider.dart';
 import 'package:sayit/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:sayit/screens/screens.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -13,48 +14,73 @@ class MobileScreenLayout extends StatefulWidget {
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
-  int _page = 0;
+  int _currIndex = 0;
+  List<Widget> pages = [
+    HomeScreen(),
+    SearchScreen(),
+    FavouritesScreen(),
+    ProfileScreen(),
+    AddPostScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    Users user = Provider.of<UserProvider>(context).getuser;
+    Users? user = Provider.of<UserProvider>(context).getuser; //added ? to Users
     return Scaffold(
-      body: Center(
-        child: Text('This is mobile'),
+      body: PageView(
+        children: [pages[_currIndex]],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0,
-        //selectedItemColor: primarycolor,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
+      bottomNavigationBar:_currIndex == 4 ?null: BottomNavBar(),
+    );
+  }
+
+
+
+
+
+  NavigationBarTheme BottomNavBar() {
+    return NavigationBarTheme(
+      data: NavigationBarThemeData(
+          indicatorColor: webbackgroundcolor.withOpacity(0.35)),
+      child: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        backgroundColor: Colors.transparent,
+        selectedIndex: _currIndex,
+        onDestinationSelected: (int newIndex) {
+          setState(() {
+            _currIndex = newIndex;
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(
               Icons.home,
-              size: 28,
-              color: _page == 0 ? primarycolor : secondarycolor,
+              color: primarycolor,
             ),
             label: "",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
+          NavigationDestination(
+            icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(
               Icons.search,
-              size: 28,
-              color: _page == 1 ? primarycolor : secondarycolor,
+              color: primarycolor,
             ),
             label: "",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite_border_outlined,
-              size: 28,
-              color: _page == 2 ? primarycolor : secondarycolor,
+          NavigationDestination(
+            icon: Icon(Icons.favorite_border_outlined),
+            selectedIcon: Icon(
+              Icons.favorite,
+              color: primarycolor,
             ),
             label: "",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(
               Icons.person,
-              size: 28,
-              color: _page == 3 ? primarycolor : secondarycolor,
+              color: primarycolor,
             ),
             label: "",
           ),

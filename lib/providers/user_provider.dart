@@ -4,8 +4,10 @@ import 'package:sayit/models/usermodel.dart';
 import 'package:sayit/resources/auth_methods.dart';
 
 class UserProvider extends ChangeNotifier {
-  late Users _user;
-  Users get getuser => _user;
+  Users? _user;
+  Users? get getuser => _user;
+  
+    
 
   final AuthMethods _authMethods = AuthMethods();
 
