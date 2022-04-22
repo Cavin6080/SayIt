@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:sayit/Utils/colors.dart';
+import 'package:sayit/providers/user_provider.dart';
 import 'package:sayit/responsive/mobileScreenLayout.dart';
 import 'package:sayit/responsive/responsive_layout_screen.dart';
 import 'package:sayit/responsive/webScreenLayout.dart';
@@ -7,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sayit/screens/login_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,46 +33,53 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Buzztalk',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      // home: ResponsiveLayout(
-      //   webScreenLayout: WebScreenLayout(),
-      //   mobileScreenLayout: MobileScreenLayout(),
-      // ),
-      // home: ResponsiveLayout(
-      //   webScreenLayout: WebScreenLayout(),
-      //   mobileScreenLayout: MobileScreenLayout(),
-      // ),,
-      home: StreamBuilder(
-        //persisting auth state
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.hasData) {
-              //means user is authnticated
-              return const ResponsiveLayout(
-                webScreenLayout: WebScreenLayout(),
-                mobileScreenLayout: MobileScreenLayout(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('${snapshot.error}'),
-              );
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=>UserProvider(),),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Buzztalk',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+     
+        home: StreamBuilder(
+          //persisting auth state
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                //means user is authnticated
+                return const ResponsiveLayout(
+                  webScreenLayout: WebScreenLayout(),
+                  mobileScreenLayout: MobileScreenLayout(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('${snapshot.error}'),
+                );
+              }
             }
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: primarycolor,
-            ));
-          }
-          return const LoginScreen();
-        },
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child: CircularProgressIndicator(
+                color: primarycolor,
+              ));
+            }
+            return const LoginScreen();
+          },
+        ),
       ),
     );
   }
 }
+
+
+
+
+     // home: ResponsiveLayout(
+      //   webScreenLayout: WebScreenLayout(),
+      //   mobileScreenLayout: MobileScreenLayout(),
+      // ),
+     

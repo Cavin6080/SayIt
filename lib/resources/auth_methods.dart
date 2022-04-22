@@ -4,12 +4,22 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sayit/models/usermodel.dart';
 import 'package:sayit/resources/storage_methods.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore =
       FirebaseFirestore.instance; //for adding users all data in database
+
+  //provider functionality
+  Future<Users> getUserDetails() async {
+    User currentUser = _auth.currentUser!;
+    DocumentSnapshot snap =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+
+    return Users.fromSnap(snap);
+  }
 
   //function to sign up the user
   Future<String> signUpUser({
@@ -33,16 +43,21 @@ class AuthMethods {
         String photoUrl = await StorageMethods()
             .uploadImageToStorage('profilePics', file, false);
 
+        //creating users model for bypass rewriting code again and again
+        Users user = Users(
+          email: email,
+          uid: cred.user!.uid,
+          username: username,
+          bio: bio,
+          followers: [],
+          following: [],
+          photoUrl: photoUrl,
+        );
+
         //Add user to firestore database
-        await _firestore.collection('users').doc(cred.user!.uid).set({
-          'username': username,
-          'uid': cred.user!.uid,
-          'email': email,
-          'bio': bio,
-          'followers': [],
-          'following': [],
-          'photoUrl': photoUrl, //profile pic upload from storage methods
-        });
+        await _firestore.collection('users').doc(cred.user!.uid).set(
+              user.toJson(),
+            );
         result = 'success';
         print(result);
       }
