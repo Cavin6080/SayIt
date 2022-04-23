@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -142,11 +141,9 @@ class _PostCardState extends State<PostCard> {
 
       commentLen = snap.docs.length;
     } catch (e) {
-      print.toString();
+      showSnackBar(e.toString(), context);
     }
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
@@ -237,7 +234,11 @@ class _PostCardState extends State<PostCard> {
                               children: ['Delete Post']
                                   .map(
                                     (e) => InkWell(
-                                      onTap: () {},
+                                      onTap: () async {
+                                        await FireStoreMethods()
+                                            .deletePost(widget.snap['postId']);
+                                        Navigator.of(context).pop();
+                                      },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 12, horizontal: 16),

@@ -59,8 +59,8 @@ class FireStoreMethods {
   }
 
   //function to store comments in database
-  Future<void> postComments(String postId, String text, String uid,
-      String name, String profileUrl) async {
+  Future<void> postComments(String postId, String text, String uid, String name,
+      String profileUrl) async {
     try {
       if (text.isNotEmpty) {
         String commentId = const Uuid().v1();
@@ -80,6 +80,15 @@ class FireStoreMethods {
       } else {
         print('Text is empty');
       }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  //deleting the post
+  Future<void> deletePost(String postId) async {
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
     } catch (e) {
       print(e.toString());
     }
