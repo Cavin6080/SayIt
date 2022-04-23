@@ -45,14 +45,43 @@ class FireStoreMethods {
   Future<void> likePPost(String postId, String uid, List likes) async {
     try {
       if (likes.contains(uid)) {
-       await _firestore.collection('posts').doc(postId).update({
-          'likes':FieldValue.arrayRemove([uid]),
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayRemove([uid]),
         });
-      }else{
-       await _firestore.collection('posts').doc(postId).update({
-          'likes':FieldValue.arrayUnion([uid]),
+      } else {
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayUnion([uid]),
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  //function to store comments in database
+  Future<void> postComments(String postId, String text, String uid,
+      String name, String profileUrl) async {
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+        await _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profileUrl': profileUrl,
+          'name': name,
+          'uid': uid,
+          'text': text,
+          'commentId': commentId,
+          'datePublished': DateTime.now()
+        });
+      } else {
+        print('Text is empty');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

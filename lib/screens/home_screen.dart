@@ -124,6 +124,31 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLen = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+
+      commentLen = snap.docs.length;
+    } catch (e) {
+      print.toString();
+    }
+    setState(() {
+      
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Users? user = Provider.of<UserProvider>(context).getuser;
@@ -346,7 +371,7 @@ class _PostCardState extends State<PostCard> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              '500 comments',
+                              '$commentLen comments',
                               style: GoogleFonts.openSans(
                                 textStyle: const TextStyle(
                                     color: Colors.black87,
@@ -361,7 +386,13 @@ class _PostCardState extends State<PostCard> {
                     Container(
                       margin: const EdgeInsets.only(right: 5),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CommentScreen(
+                              snap: widget.snap,
+                            ),
+                          ),
+                        ),
                         icon: Icon(
                           Icons.message_rounded,
                           color: purplecolor.withOpacity(0.6),
