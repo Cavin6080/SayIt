@@ -34,11 +34,11 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
       body: PageView(
         children: [pages[_currIndex]],
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: bottomNavBar(),
     );
   }
 
-  NavigationBarTheme BottomNavBar() {
+  NavigationBarTheme bottomNavBar() {
     return NavigationBarTheme(
       data: NavigationBarThemeData(
           indicatorColor: webbackgroundcolor.withOpacity(0.35)),
