@@ -1,4 +1,4 @@
-# SayIt(InstGram Clone with New UI)
+# SayIt(Instagram Clone with New UI)
 
 This app is completly responsive and it works on android,ios and web!
 
