@@ -11,6 +11,12 @@ This app is completly responsive and it works on android,ios and web!
 - Take The Web FirebaseOptions and put it in main function in main.dart file and add all the keys
 -Run flutter pub get
 
+<p align="center">
+  <img width="300" src="https://github.com/Cavin6080/SayIt/blob/main/Screenshot_20220423-224911.jpg">
+    <img width="300" src="https://github.com/Cavin6080/SayIt/blob/main/Screenshot_20220423-224949.jpg>
+    <img width="300" src="https://github.com/Cavin6080/SayIt/blob/main/Screenshot_20220423-225009.jpg">
+</p>
+
 ## Features
 - Responsive UI
 - Email & Password Authentication(You can add any type of authentication)
