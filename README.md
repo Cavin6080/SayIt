@@ -13,7 +13,8 @@ This app is completly responsive and it works on android,ios and web!
 
 <p align="center">
   <img width="300" src="https://github.com/Cavin6080/SayIt/blob/main/Screenshot_20220423-224949.jpg">
-    <img width="300" src="https://github.com/Cavin6080/SayIt/blob/main/Screenshot_20220423-224949.jpg">
+    <img width="300" src="https://github.com/Cavin6080/SayIt/blob/main/Screenshot_20220423-225009.jpg">
+   <img width="300" src="https://github.com/Cavin6080/SayIt/blob/main/Screenshot_20220423-225009.jpg">
   
 </p>
 
