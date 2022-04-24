@@ -1,16 +1,39 @@
-# sayit
+# SayIt(InstGram Clone with New UI)
 
-A new Flutter project.
+This app is completly responsive and it works on android,ios and web!
 
-## Getting Started
+## Insturctions for installation
+-Clone The Repository
+-Migrate to ```SayIt``` folder
+- Create Firebase Project
+- Enable Authentication
+- And Make Firestore Rules To Just Read And Write
+- Take The Web FirebaseOptions and put it in main function in main.dart file and add all the keys
+-Run flutter pub get
 
-This project is a starting point for a Flutter application.
+## Features
+- Responsive UI
+- Email & Password Authentication(You can add any type of authentication)
+- Share and Display Posts with Caption
+- Like & Comment on Posts
+- Search Users
+- Follow/Unfollow Users
+- Display User Posts, Followers & Following
+- EVERYTHING REAL TIME
+- Sign Out
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+## Backend Used
+Firebase Auth, Firebase Storage, Firebase Firestore
+
+## Front-end Used
+Flutter, Provider
+    
+## Feedback
+
+If you have any feedback, please reach out to me at cavinmacwan1@gmail.com
+
+
