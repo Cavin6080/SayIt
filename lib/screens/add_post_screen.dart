@@ -62,7 +62,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             child: Text(
               'Post',
               style: GoogleFonts.openSans(
-                textStyle: TextStyle(
+                textStyle:const TextStyle(
                   color: purplecolor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

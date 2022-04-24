@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:sayit/Utils/colors.dart';
 import 'package:sayit/models/usermodel.dart';
@@ -8,22 +9,20 @@ import 'package:sayit/screens/screens.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
-   
-    
 
   @override
   State<MobileScreenLayout> createState() => _MobileScreenLayoutState();
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
- 
-  
   int _currIndex = 0;
   List<Widget> pages = [
     HomeScreen(),
     SearchScreen(),
     FavouritesScreen(),
-    ProfileScreen(),
+    ProfileScreen(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+    ),
     AddPostScreen(),
   ];
 

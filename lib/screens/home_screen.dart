@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,6 +123,30 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLen = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+
+      commentLen = snap.docs.length;
+      setState(() {});
+    } catch (e) {
+      print(e.toString());
+    }
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     final Users? user = Provider.of<UserProvider>(context).getuser;
@@ -212,7 +235,11 @@ class _PostCardState extends State<PostCard> {
                               children: ['Delete Post']
                                   .map(
                                     (e) => InkWell(
-                                      onTap: () {},
+                                      onTap: () async {
+                                        await FireStoreMethods()
+                                            .deletePost(widget.snap['postId']);
+                                        Navigator.of(context).pop();
+                                      },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 12, horizontal: 16),
@@ -346,7 +373,7 @@ class _PostCardState extends State<PostCard> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              '500 comments',
+                              '$commentLen comments',
                               style: GoogleFonts.openSans(
                                 textStyle: const TextStyle(
                                     color: Colors.black87,
@@ -361,7 +388,13 @@ class _PostCardState extends State<PostCard> {
                     Container(
                       margin: const EdgeInsets.only(right: 5),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CommentScreen(
+                              snap: widget.snap,
+                            ),
+                          ),
+                        ),
                         icon: Icon(
                           Icons.message_rounded,
                           color: purplecolor.withOpacity(0.6),
